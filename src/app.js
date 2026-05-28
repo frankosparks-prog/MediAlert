@@ -32,7 +32,7 @@ app.use('/api/gamification', gamificationRoutes);
 app.use('/api/community', communityRoutes);
 
 // Catch-all route for unhandled paths
-app.all('*', (req, res, next) => {
+app.use((req, res, next) => {
   next(new AppError(`Cannot find path ${req.originalUrl} on this server`, 404));
 });
 
