@@ -9,17 +9,22 @@ const adherenceRoutes = require('./api/adherence/adherence.routes');
 const gamificationRoutes = require('./api/gamification/gamification.routes');
 const communityRoutes = require('./api/community/community.routes');
 
+const escalationQueueService = require('./core/queues/escalationQueueService');
+const { isRedisEnabled } = require('./core/config/redis');
+
 const app = express();
 
 // Global Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Base Route / Health Check
-app.get('/health', (req, res) => {
+// Base Route / Health Check with Queue & Redis status
+app.get('/health', async (req, res) => {
+  const queueStatus = await escalationQueueService.getQueueStatus();
   res.status(200).json({
     status: 'success',
     message: 'MediAlert Backend API is healthy.',
+    queue: queueStatus,
     timestamp: new Date()
   });
 });

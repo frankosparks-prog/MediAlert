@@ -48,6 +48,59 @@ class AdherenceController {
   }
 
   /**
+   * Mark a caregiver alert as viewed (cancels pending SMS fallback)
+   */
+  async viewAlert(req, res, next) {
+    try {
+      const { alertId } = req.params;
+      const alert = await adherenceService.markAlertAsViewed(alertId, req.user._id);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Alert marked as viewed. Pending SMS fallback cancelled.',
+        data: { alert }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Acknowledge a caregiver alert (caregiver checking on patient)
+   */
+  async acknowledgeAlert(req, res, next) {
+    try {
+      const { alertId } = req.params;
+      const alert = await adherenceService.markAlertAsAcknowledged(alertId, req.user._id);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Alert acknowledged. Pending SMS fallback cancelled.',
+        data: { alert }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * List caregiver alerts for the logged-in user
+   */
+  async getCaregiverAlerts(req, res, next) {
+    try {
+      const alerts = await adherenceService.getCaregiverAlerts(req.user._id);
+
+      res.status(200).json({
+        status: 'success',
+        results: alerts.length,
+        data: { alerts }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * For testing: manually trigger a new medication schedule (Level 1 Alert)
    */
   async triggerSchedule(req, res, next) {

@@ -21,7 +21,7 @@ class AuthService {
    * @param {Object} userData
    */
   async register(userData) {
-    const { username, role, contactInfo, pinHash, associatedUsers } = userData;
+    const { username, role, contactInfo, phoneNumber, pinHash, associatedUsers } = userData;
 
     // Check if user already exists
     const existingUser = await User.findOne({ username });
@@ -34,6 +34,7 @@ class AuthService {
       username,
       role,
       contactInfo,
+      phoneNumber: phoneNumber || (contactInfo && !contactInfo.includes('@') ? contactInfo : undefined),
       pinHash, // Will be encrypted in mongoose pre-save hook
       associatedUsers: associatedUsers || []
     });
@@ -43,8 +44,12 @@ class AuthService {
       await GamificationProfile.create({
         patientId: newUser._id,
         currentStreak: 0,
+        longestStreak: 0,
         xpPoints: 0,
-        plantStage: 'Seed'
+        plantStage: 'Seed',
+        plantStatus: 'Healthy',
+        freePassesAvailable: 1,
+        lastFreePassResetMonth: new Date().toISOString().slice(0, 7)
       });
     }
 

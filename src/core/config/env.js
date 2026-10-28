@@ -10,7 +10,13 @@ const config = {
   JWT_SECRET: process.env.JWT_SECRET || 'fallback_secret_key_change_me_in_production',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
   ESCALATION_INTERVAL_MINUTES: parseFloat(process.env.ESCALATION_INTERVAL_MINUTES || '15'),
-  NODE_ENV: process.env.NODE_ENV || 'development'
+  NODE_ENV: process.env.NODE_ENV || 'development',
+  REDIS_URL: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
+  ESCALATION_QUEUE_NAME: process.env.ESCALATION_QUEUE_NAME || 'medialert-escalation-dev',
+  TEXTSMS_API_KEY: process.env.TEXTSMS_API_KEY || '',
+  PARTNER_ID: process.env.PARTNER_ID || '',
+  SENDER_ID: process.env.SENDER_ID || 'TextSMS',
+  SMS_FALLBACK_MINUTES: parseFloat(process.env.SMS_FALLBACK_MINUTES || '5')
 };
 
 // Simple configuration validation

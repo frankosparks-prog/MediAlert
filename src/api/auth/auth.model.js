@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Please provide contact info (email or phone)'],
       trim: true,
     },
+    phoneNumber: {
+      type: String,
+      trim: true,
+    },
     pinHash: {
       type: String,
       required: [true, 'Please provide a security PIN / password'],
