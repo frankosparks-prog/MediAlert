@@ -39,6 +39,30 @@ class MedicationController {
       next(error);
     }
   }
+
+  async update(req, res, next) {
+    try {
+      const medication = await medicationService.updateMedication(req.params.id, req.body);
+      res.status(200).json({
+        status: 'success',
+        data: { medication }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async remove(req, res, next) {
+    try {
+      await medicationService.deleteMedication(req.params.id);
+      res.status(200).json({
+        status: 'success',
+        message: 'Medication deleted successfully.'
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new MedicationController();

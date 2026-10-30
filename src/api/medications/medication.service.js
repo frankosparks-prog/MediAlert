@@ -7,7 +7,7 @@ class MedicationService {
    * @param {Object} medicationData
    */
   async createMedication(medicationData) {
-    const { patientId, drugName, dosage, scheduleInterval } = medicationData;
+    const { patientId, drugName, dosage, quantity, scheduleInterval, instructions, plantType } = medicationData;
 
     if (!patientId || !drugName || !dosage) {
       throw new AppError('Please provide patientId, drugName, and dosage', 400);
@@ -17,10 +17,39 @@ class MedicationService {
       patientId,
       drugName,
       dosage,
+      quantity: quantity || '1 pill',
       scheduleInterval: scheduleInterval || '08:00',
+      instructions: instructions || 'Take with water',
+      plantType: plantType || 'Sunflower',
+      isActive: true,
     });
 
     return medication;
+  }
+
+  /**
+   * Update medication
+   * @param {string} medId
+   * @param {Object} updateData
+   */
+  async updateMedication(medId, updateData) {
+    const med = await Medication.findByIdAndUpdate(medId, updateData, { new: true, runValidators: true });
+    if (!med) {
+      throw new AppError('Medication not found', 404);
+    }
+    return med;
+  }
+
+  /**
+   * Delete medication
+   * @param {string} medId
+   */
+  async deleteMedication(medId) {
+    const med = await Medication.findByIdAndDelete(medId);
+    if (!med) {
+      throw new AppError('Medication not found', 404);
+    }
+    return med;
   }
 
   /**

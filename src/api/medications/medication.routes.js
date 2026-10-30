@@ -9,5 +9,7 @@ router.use(protect);
 
 router.post('/', medicationController.create);
 router.get('/', medicationController.list);
+router.put('/:id', medicationController.update);
+router.delete('/:id', medicationController.remove);
 
 module.exports = router;

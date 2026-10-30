@@ -204,7 +204,8 @@ class AdherenceService {
       return { status: 'skipped', reason: 'data_missing' };
     }
 
-    const message = `🚨 URGENT MediAlert: ${patient.username} has missed their scheduled dose of ${medication.drugName} (${medication.dosage}). In-app alert was unviewed. Please check on them immediately!`;
+    const qtyStr = medication.quantity ? `${medication.quantity} of ` : '';
+    const message = `🚨 URGENT MediAlert: ${patient.username} has missed their scheduled dose of ${qtyStr}${medication.drugName} (${medication.dosage}). In-app alert was unviewed. Please check on them immediately!`;
 
     const smsResult = await smsService.sendSMS(alert.recipientPhone, message);
 

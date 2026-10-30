@@ -10,15 +10,16 @@ class NotificationService {
    * @param {Object} medication - Mongoose Medication document
    */
   async sendLevel1Alert(patient, medication) {
+    const qtyStr = medication.quantity ? `${medication.quantity} of ` : '';
     console.log(`\n🔔 [Notification Service] - LEVEL 1 ALERT SENT`);
     console.log(`   Target User: ${patient.username} (${patient.contactInfo})`);
-    console.log(`   Medication: ${medication.drugName} - ${medication.dosage}`);
+    console.log(`   Medication: ${qtyStr}${medication.drugName} - ${medication.dosage}`);
     console.log(`   FCM/APNs Payload:`);
     console.log(JSON.stringify({
       to: `/topics/user_${patient._id}`,
       notification: {
         title: "Medication Reminder",
-        body: `It is time to take your ${medication.drugName} (${medication.dosage}).`,
+        body: `It is time to take your ${qtyStr}${medication.drugName} (${medication.dosage}).`,
         sound: "default"
       },
       data: {
@@ -37,16 +38,17 @@ class NotificationService {
    * @param {Object} medication - Mongoose Medication document
    */
   async sendLevel2Alert(patient, medication) {
+    const qtyStr = medication.quantity ? `${medication.quantity} of ` : '';
     console.log(`\n🔔🔔 [Notification Service] - LEVEL 2 ALERT SENT`);
     console.log(`   Target User: ${patient.username} (${patient.contactInfo})`);
-    console.log(`   Medication: ${medication.drugName} - ${medication.dosage}`);
+    console.log(`   Medication: ${qtyStr}${medication.drugName} - ${medication.dosage}`);
     console.log(`   FCM/APNs Payload:`);
     console.log(JSON.stringify({
       to: `/topics/user_${patient._id}`,
       priority: "high", // High-priority delivery
       notification: {
         title: "⚠️ High Priority: Medication Overdue",
-        body: `You are 15 minutes late taking your ${medication.drugName}. Please take it now.`,
+        body: `You are 15 minutes late taking your ${qtyStr}${medication.drugName}. Please take it now.`,
         sound: "alert_continuous.caf"
       },
       data: {
@@ -65,16 +67,17 @@ class NotificationService {
    * @param {Object} medication - Mongoose Medication document
    */
   async sendLevel3Alert(patient, medication) {
+    const qtyStr = medication.quantity ? `${medication.quantity} of ` : '';
     console.log(`\n🔔🔔🔔 [Notification Service] - LEVEL 3 ALERT SENT (CRITICAL)`);
     console.log(`   Target User: ${patient.username} (${patient.contactInfo})`);
-    console.log(`   Medication: ${medication.drugName} - ${medication.dosage}`);
+    console.log(`   Medication: ${qtyStr}${medication.drugName} - ${medication.dosage}`);
     console.log(`   FCM/APNs Payload:`);
     console.log(JSON.stringify({
       to: `/topics/user_${patient._id}`,
       aps: {
         alert: {
           title: "🚨 URGENT: Medication Critical Alert",
-          body: `CRITICAL REMINDER: Take your ${medication.drugName} immediately.`
+          body: `CRITICAL REMINDER: Take your ${qtyStr}${medication.drugName} immediately.`
         },
         sound: {
           critical: 1, // Bypass silent switch/DND
@@ -99,17 +102,18 @@ class NotificationService {
    * @param {Object} medication - Mongoose Medication document
    */
   async sendDependantAlert(contactUser, patient, medication) {
+    const qtyStr = medication.quantity ? `${medication.quantity} of ` : '';
     console.log(`\n🚨🚨🚨 [Notification Service] - DEPENDANT / CAREGIVER ALERT SENT`);
     console.log(`   Escalating to: ${contactUser.username} (${contactUser.contactInfo}) - Role: ${contactUser.role}`);
     console.log(`   Regarding Patient: ${patient.username} (role: Patient)`);
-    console.log(`   Medication Missed: ${medication.drugName} - ${medication.dosage}`);
+    console.log(`   Medication Missed: ${qtyStr}${medication.drugName} - ${medication.dosage}`);
     console.log(`   FCM/APNs Payload:`);
     console.log(JSON.stringify({
       to: `/topics/user_${contactUser._id}`,
       priority: "high",
       notification: {
         title: `🚨 Alert: ${patient.username} missed their medication`,
-        body: `${patient.username} has missed their scheduled dose of ${medication.drugName} (${medication.dosage}) after multiple reminders. Please check on them.`
+        body: `${patient.username} has missed their scheduled dose of ${qtyStr}${medication.drugName} (${medication.dosage}) after multiple reminders. Please check on them.`
       },
       data: {
         type: "escalation",
